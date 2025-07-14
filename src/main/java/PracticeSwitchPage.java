@@ -32,4 +32,5 @@ public class PracticeSwitchPage {
     public void clickBtn() {
         alertBtn.click();
     }
+
 }
