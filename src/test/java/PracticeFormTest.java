@@ -25,7 +25,7 @@ public class PracticeFormTest extends PracticeFormPage {
     }
 
     public static void pause() throws InterruptedException {
-        Thread.sleep(2000);
+        Thread.sleep(200);
     }
 
     @Test
