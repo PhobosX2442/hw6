@@ -1,16 +1,15 @@
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.conditions.Or;
 import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static com.codeborne.selenide.Selenide.closeWindow;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PracticeFormTest extends PracticeFormPage {
+public class PracticeFormTest {
 
      PracticeFormPage practiceFormPage = new PracticeFormPage();
      PracticeSwitchPage practiceSwitchPage = new PracticeSwitchPage();
@@ -24,65 +23,72 @@ public class PracticeFormTest extends PracticeFormPage {
         Configuration.browserSize = "1920x1280";
     }
 
-    public static void pause() throws InterruptedException {
-        Thread.sleep(200);
+    @BeforeEach
+    public void openBrowser() throws InterruptedException{
+        practiceFormPage.openPage();
     }
 
     @Test
-    @Order(0)
     @DisplayName("Заполнение формы (некорректное)")
     public void InputFormFailed() throws InterruptedException {
-        practiceFormPage.openPage();
         practiceFormPage.setFirstName("Петушкослав");
         practiceFormPage.submitForm();
-        practiceFormPage.lastNameInputInvalid();
-        pause();
+        practiceFormPage.hasInvalidColor();
     }
 
     @Test
-    @Order(1)
     @DisplayName("Заполнение формы")
-    public void inputForm()  {
+    public void inputForm() throws InterruptedException {
+        //заполнение формы
         practiceFormPage.setFirstName("Светослав");
         practiceFormPage.setLastName("Петушкевич");
         practiceFormPage.setEmailInput("testemail@mail.ru");
         practiceFormPage.setGender();
         practiceFormPage.setMobileInput("1234567890");
+        practiceFormPage.getSubject("Maths");
+        practiceFormPage.getHobbies("Reading");
+        practiceFormPage.getStateCity("Haryana", "Karnal");
+        practiceFormPage.getAddress("Random Address");
+        practiceFormPage.uploadPicture("src/main/resources/testimg.jpg");
+        practiceFormPage.setDateBirth("July", "1996", "6");
+        //отправка данных
         practiceFormPage.submitForm();
-    }
 
-    @Test
-    @Order(2)
-    @DisplayName("Проверка ответа")
-    public void checkForm() {
+
         Map<String, String> expectedResults = new HashMap<>();
-        expectedResults.put(NAME, "Светослав Петушкевич");
-        expectedResults.put(EMAIL, "testemail@mail.ru");
-        expectedResults.put(GENDER, "Male");
-        expectedResults.put(MOBILE, "1234567890");
+        expectedResults.put(String.valueOf(Form.valueOf("NAME").getLabel()), "Светослав Петушкевич");
+        expectedResults.put(String.valueOf(Form.valueOf("EMAIL").getLabel()), "testemail@mail.ru");
+        expectedResults.put(String.valueOf(Form.valueOf("GENDER").getLabel()), "Male");
+        expectedResults.put(String.valueOf(Form.valueOf("MOBILE").getLabel()), "1234567890");
+        expectedResults.put(String.valueOf(Form.valueOf("SUBJECTS").getLabel()), "Maths");
+        expectedResults.put(String.valueOf(Form.valueOf("HOBBIES").getLabel()), "Reading");
+        expectedResults.put(String.valueOf(Form.valueOf("BIRTH").getLabel()), "06 July,1996");
+        expectedResults.put(String.valueOf(Form.valueOf("STATE").getLabel()), "Haryana Karnal");
+        expectedResults.put(String.valueOf(Form.valueOf("ADDRESS").getLabel()), "Random Address");
+        expectedResults.put(String.valueOf(Form.valueOf("PICTURE").getLabel()), "TestIMG.jpg");
 
         Map<String, String> actualResults = practiceFormPage.getSubmissionResults();
-
         Assertions.assertEquals(expectedResults, actualResults);
     }
 
 
+
     @Test
-    @Order(3)
     @DisplayName("Переход на другую вкладку")
     public void switchPage() throws InterruptedException {
-        pause();
-        practiceSwitchPage.closeModal();
         practiceSwitchPage.clickFrame();
         practiceSwitchPage.clickPage();
         practiceSwitchPage.clickBtn();
-        pause();
         Selenide.confirm();
     }
 
+    @AfterEach
+    public void closeBrowser() throws InterruptedException{
+        closeWindow();
+    }
     @AfterAll
     public static void finish() throws InterruptedException{
-        pause();
+        closeWebDriver();
     }
 
 }

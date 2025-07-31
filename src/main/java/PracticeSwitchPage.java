@@ -13,12 +13,7 @@ public class PracticeSwitchPage {
     private SelenideElement alertsFrame = $(byText("Alerts, Frame & Windows"));
     private SelenideElement alertsPage = $x("/html/body/div[2]/div/div/div/div[1]/div/div/div[3]/div/ul/li[2]");
     private SelenideElement alertBtn = $("#alertButton");
-    private SelenideElement modal = $("#closeLargeModal");
 
-
-    public void closeModal()  {
-        modal.click();
-    }
 
     public void clickFrame() {
         alertsFrame.click();
