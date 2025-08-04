@@ -1,10 +1,10 @@
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
@@ -25,8 +25,8 @@ public class PracticeFormPage {
     private SelenideElement addressArea = $("#currentAddress");
     private SelenideElement inputUploadPicture = $("#uploadPicture");
 
-    public SelenideElement pickMonth = $("select[class='react-datepicker__month-select']");
-    public SelenideElement pickYear = $("select[class='react-datepicker__year-select']");
+    private SelenideElement pickMonth = $("select[class='react-datepicker__month-select']");
+    private SelenideElement pickYear = $("select[class='react-datepicker__year-select']");
 
 
 
@@ -93,23 +93,24 @@ public class PracticeFormPage {
         inputDateBirth.click();
         pickMonth.selectOptionContainingText(month);
         pickYear.selectOptionContainingText(year);
-        $(byText(day)).click();
+        $$("div.react-datepicker__day:not(.react-datepicker__day--outside-month)")
+                .findBy(text(day))
+                .click();
+
     }
 
 
-    public Map<String, String> getSubmissionResults() {
-        ElementsCollection rows = $$("table tr");
-        Map<String, String> resultMap = new HashMap<>();
+
+    public Map<Form, String> getSubmissionResults() {
+        ElementsCollection rows = $$("table tbody tr");
+        Map<Form, String> resultMap = new HashMap<>();
 
         for (SelenideElement row : rows) {
-            ElementsCollection labelCells = row.$$("td:nth-of-type(1)");
-            ElementsCollection valueCells = row.$$("td:nth-of-type(2)");
-
-            String labelText = labelCells.texts().stream().collect(Collectors.joining(", "));
-            String valueText = valueCells.texts().stream().collect(Collectors.joining(", "));
+            String labelText = row.$("td", 0).getText();
+            String valueText = row.$("td", 1).getText();
 
             if (!valueText.isEmpty()) {
-                resultMap.put(labelText, valueText);
+                resultMap.put(Form.fromLabel(labelText), valueText);
             }
         }
 

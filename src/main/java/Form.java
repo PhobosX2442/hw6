@@ -1,3 +1,5 @@
+import java.util.List;
+
 public enum Form {
 
     EMAIL ("Student Email"),
@@ -13,6 +15,16 @@ public enum Form {
 
     private String label;
 
+    public static Form fromLabel(String label) {
+        for (Form form : values()) {
+            if (form.getLabel().equals(label)) {
+                return form;
+            }
+        }
+        // Если не нашли подходящий элемент
+        return null;
+    }
+
     Form(String label) {
         this.label = label;
     }
@@ -20,5 +32,4 @@ public enum Form {
     public String getLabel() {
         return label;
     }
-
 }

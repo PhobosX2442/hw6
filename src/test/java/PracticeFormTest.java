@@ -8,11 +8,25 @@ import java.util.Map;
 import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static com.codeborne.selenide.Selenide.closeWindow;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PracticeFormTest {
 
      PracticeFormPage practiceFormPage = new PracticeFormPage();
      PracticeSwitchPage practiceSwitchPage = new PracticeSwitchPage();
+
+
+     String name = "Светослав";
+     String lastname = "Петушкевич";
+     String email = "testemail@mail.ru";
+     String mobile = "1234567890";
+     String subject = "Maths";
+     String hobbies = "Reading";
+     String state = "Haryana";
+     String city = "Karnal";
+     String address = "Random Address";
+     String picture = "src/main/resources/testimg.jpg";
+     String monthbirth = "July";
+     String yearbirth = "1996";
+     String daybirth = "30";
 
     @BeforeAll
     public static void setUp() {
@@ -40,34 +54,38 @@ public class PracticeFormTest {
     @DisplayName("Заполнение формы")
     public void inputForm() throws InterruptedException {
         //заполнение формы
-        practiceFormPage.setFirstName("Светослав");
-        practiceFormPage.setLastName("Петушкевич");
-        practiceFormPage.setEmailInput("testemail@mail.ru");
+        practiceFormPage.setFirstName(name);
+        practiceFormPage.setLastName(lastname);
+        practiceFormPage.setEmailInput(email);
         practiceFormPage.setGender();
-        practiceFormPage.setMobileInput("1234567890");
-        practiceFormPage.getSubject("Maths");
-        practiceFormPage.getHobbies("Reading");
-        practiceFormPage.getStateCity("Haryana", "Karnal");
-        practiceFormPage.getAddress("Random Address");
-        practiceFormPage.uploadPicture("src/main/resources/testimg.jpg");
-        practiceFormPage.setDateBirth("July", "1996", "6");
+        practiceFormPage.setMobileInput(mobile);
+        practiceFormPage.getSubject(subject);
+        practiceFormPage.getHobbies(hobbies);
+        practiceFormPage.getStateCity(state, city);
+        practiceFormPage.getAddress(address);
+        practiceFormPage.uploadPicture(picture);
+        practiceFormPage.setDateBirth(monthbirth, yearbirth, daybirth);
         //отправка данных
         practiceFormPage.submitForm();
+        //добавление 0 на случай, если число окажется однодигитовым
+        if (daybirth.length() == 1) {
+            daybirth = "0" + daybirth;
+        }
 
 
-        Map<String, String> expectedResults = new HashMap<>();
-        expectedResults.put(String.valueOf(Form.valueOf("NAME").getLabel()), "Светослав Петушкевич");
-        expectedResults.put(String.valueOf(Form.valueOf("EMAIL").getLabel()), "testemail@mail.ru");
-        expectedResults.put(String.valueOf(Form.valueOf("GENDER").getLabel()), "Male");
-        expectedResults.put(String.valueOf(Form.valueOf("MOBILE").getLabel()), "1234567890");
-        expectedResults.put(String.valueOf(Form.valueOf("SUBJECTS").getLabel()), "Maths");
-        expectedResults.put(String.valueOf(Form.valueOf("HOBBIES").getLabel()), "Reading");
-        expectedResults.put(String.valueOf(Form.valueOf("BIRTH").getLabel()), "06 July,1996");
-        expectedResults.put(String.valueOf(Form.valueOf("STATE").getLabel()), "Haryana Karnal");
-        expectedResults.put(String.valueOf(Form.valueOf("ADDRESS").getLabel()), "Random Address");
-        expectedResults.put(String.valueOf(Form.valueOf("PICTURE").getLabel()), "TestIMG.jpg");
+        Map<Form, String> expectedResults = new HashMap<>();
+        expectedResults.put(Form.NAME, name + " " + lastname);
+        expectedResults.put(Form.EMAIL, email);
+        expectedResults.put(Form.GENDER, "Male");
+        expectedResults.put(Form.MOBILE, mobile);
+        expectedResults.put(Form.SUBJECTS, subject);
+        expectedResults.put(Form.HOBBIES, hobbies);
+        expectedResults.put(Form.BIRTH, daybirth + " " + monthbirth + "," + yearbirth);
+        expectedResults.put(Form.STATE, state + " " + city);
+        expectedResults.put(Form.ADDRESS, address);
+        expectedResults.put(Form.PICTURE, "TestIMG.jpg");
 
-        Map<String, String> actualResults = practiceFormPage.getSubmissionResults();
+        Map<Form, String> actualResults = practiceFormPage.getSubmissionResults();
         Assertions.assertEquals(expectedResults, actualResults);
     }
 
