@@ -14,19 +14,19 @@ public class PracticeFormTest {
      PracticeSwitchPage practiceSwitchPage = new PracticeSwitchPage();
 
 
-     String name = "Светослав";
-     String lastname = "Петушкевич";
-     String email = "testemail@mail.ru";
-     String mobile = "1234567890";
-     String subject = "Maths";
-     String hobbies = "Reading";
-     String state = "Haryana";
-     String city = "Karnal";
-     String address = "Random Address";
-     String picture = "src/main/resources/testimg.jpg";
-     String monthbirth = "July";
-     String yearbirth = "1996";
-     String daybirth = "30";
+     private String name = "Светослав";
+     private String lastname = "Петушкевич";
+     private String email = "testemail@mail.ru";
+     private String mobile = "1234567890";
+     private String subject = "Maths";
+     private String hobbies = "Reading";
+     private String state = "Haryana";
+     private String city = "Karnal";
+     private String address = "Random Address";
+     private String picture = "src/main/resources/testimg.jpg";
+     private String monthbirth = "July";
+     private String yearbirth = "1996";
+     private String daybirth = "30";
 
     @BeforeAll
     public static void setUp() {
